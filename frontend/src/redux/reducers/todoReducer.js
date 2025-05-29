@@ -3,7 +3,7 @@ import {
   EDIT_TODO,
   DELETE_TODO,
   FETCH_TODOS,
-//   TODOS_FETCHED
+  TODOS_FETCHED
 } from '../actions/todoActions';
 
 const initialState = {
@@ -33,11 +33,11 @@ const todoReducer = (state = initialState, action) => {
   switch (action.type) {
     case FETCH_TODOS:
       return state;
-    // case TODOS_FETCHED:
-    //     return {
-    //         ...state,
-    //         todos: action.payload 
-    //     };
+    case TODOS_FETCHED:
+        return {
+            ...state,
+            todos: action.payload 
+        };
     case ADD_TODO:
       return {
         ...state,
