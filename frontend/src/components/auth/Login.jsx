@@ -16,7 +16,7 @@ const Login = () => {
     if (isAuthenticated) {
       navigate('/');
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

@@ -7,13 +7,12 @@ import {
 
 function* registerSaga(action) {
   try {
-    const res = yield call(Api.fetch, '/register', {
+    yield call(Api.fetch, '/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(action.payload),
     });
-    localStorage.setItem('token', res.access_token);
-    yield put({ type: REGISTER_SUCCESS, payload: res.access_token });
+   yield put({ type: REGISTER_SUCCESS });
   } catch (error) {
     yield put({ type: REGISTER_FAILURE, payload: error.message });
   }

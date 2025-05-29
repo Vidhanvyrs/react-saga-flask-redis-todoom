@@ -7,7 +7,7 @@ import { registerRequest } from '../../redux/actions/authActions';
 const Register = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, error, isAuthenticated } = useSelector(state => state.auth);
+  const { loading, error, registerSuccess } = useSelector(state => state.auth);
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -16,10 +16,10 @@ const Register = () => {
   const [localError, setLocalError] = useState('');
 
    useEffect(() => {
-      if (isAuthenticated) {
-        navigate('/');
+      if (registerSuccess) {
+        navigate('/login');
       }
-    }, [isAuthenticated, navigate]);
+    }, [registerSuccess]);
   const handleSubmit = (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {

@@ -10,19 +10,23 @@ const initialState = {
   token: token || null,
   loading: false,
   error: null,
+  registerSuccess: false
 };
 
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case LOGIN_REQUEST:
-    case REGISTER_REQUEST:
       return { ...state, loading: true, error: null };
     case LOGIN_SUCCESS:
-    case REGISTER_SUCCESS: // auto-login after register
       return { ...state, loading: false, isAuthenticated: true, token: action.payload, error: null };
     case LOGIN_FAILURE:
-    case REGISTER_FAILURE:
       return { ...state, loading: false, error: action.payload };
+    case REGISTER_REQUEST:
+      return { ...state, loading: true, error: null, registerSuccess: false };
+    case REGISTER_SUCCESS:
+      return { ...state, loading: false, registerSuccess: true, error: null };
+    case REGISTER_FAILURE:
+      return { ...state, loading: false, error: action.payload, registerSuccess: false };
     case LOGOUT:
       return { ...state, isAuthenticated: false, token: null };
     default:
