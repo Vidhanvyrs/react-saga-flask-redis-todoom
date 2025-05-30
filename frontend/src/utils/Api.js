@@ -12,7 +12,16 @@ const Api = {
       ...options,
       headers,
     });
-    if (!res.ok) throw new Error('API error');
+    if (!res.ok){
+      let errorMsg = 'API error';
+      try {
+        const data = await res.json();
+        errorMsg = data.message || errorMsg;
+      } catch (e) {
+        console.error('Error parsing error response:', e);
+      }
+        throw new Error(errorMsg);        
+    }
     return res.json();
   }
 };

@@ -7,26 +7,7 @@ import {
 } from '../actions/todoActions';
 
 const initialState = {
-  todos: [
-    { 
-      id: 1, 
-      title: 'Netflix chill', 
-      description: 'chilling out',
-      createdAt: new Date('2023-05-01T10:00:00').toISOString() 
-    },
-    { 
-      id: 2, 
-      title: 'Build a project', 
-      description: 'Create a todo app',
-      createdAt: new Date('2023-05-02T14:30:00').toISOString()
-    },
-    { 
-      id: 3, 
-      title: 'Watch F1', 
-      description: 'This weekends F1 race is up',
-      createdAt: new Date('2023-05-03T09:15:00').toISOString()
-    }
-  ]
+  todos: []
 };
 
 const todoReducer = (state = initialState, action) => {

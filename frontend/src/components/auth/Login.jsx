@@ -20,6 +20,10 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if(password.length < 6) {
+      alert('Password must be at least 6 characters long');
+      return;
+    }
     dispatch(loginRequest({ username, password }));
   };
 
@@ -29,7 +33,7 @@ const Login = () => {
         Login
       </Typography>
       <Box component="form" sx={{ mt: 2 }} onSubmit={handleSubmit}>
-        {error && <Alert severity="error">{error}</Alert>}
+        {error && <Alert severity="error">Error : {error}</Alert>}
         <TextField
           fullWidth
           label="Username"
@@ -47,6 +51,7 @@ const Login = () => {
           required
           value={password}
           onChange={e => setPassword(e.target.value)}
+          inputProps={{ minLength: 6 }} 
         />
         <Button
           type="submit"
