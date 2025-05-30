@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { addTodo } from '../redux/actions/todoActions';
+import { addTodoRequest } from '../redux/actions/todoActions';
 import { TextField, Button, Box, Paper } from '@mui/material';
 
 const TodoForm = () => {
@@ -26,7 +26,7 @@ const TodoForm = () => {
         id: Date.now(),
         createdAt: new Date().toISOString() // Add current timestamp
       };
-      dispatch(addTodo(newTodo));
+      dispatch(addTodoRequest(newTodo));
       setTodo({
         title: '',
         description: ''

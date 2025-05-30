@@ -1,7 +1,7 @@
 import {
-  ADD_TODO,
-  EDIT_TODO,
-  DELETE_TODO,
+  ADD_TODO_SUCCESS,
+  EDIT_TODO_SUCCESS,
+  DELETE_TODO_SUCCESS,
   FETCH_TODOS,
   TODOS_FETCHED
 } from '../actions/todoActions';
@@ -34,23 +34,23 @@ const todoReducer = (state = initialState, action) => {
     case FETCH_TODOS:
       return state;
     case TODOS_FETCHED:
-        return {
-            ...state,
-            todos: action.payload 
-        };
-    case ADD_TODO:
+      return {
+        ...state,
+        todos: action.payload
+      };
+    case ADD_TODO_SUCCESS:
       return {
         ...state,
         todos: [...state.todos, action.payload]
       };
-    case EDIT_TODO:
+    case EDIT_TODO_SUCCESS:
       return {
         ...state,
         todos: state.todos.map(todo =>
           todo.id === action.payload.id ? action.payload.updatedTodo : todo
         )
       };
-    case DELETE_TODO:
+    case DELETE_TODO_SUCCESS:
       return {
         ...state,
         todos: state.todos.filter(todo => todo.id !== action.payload)

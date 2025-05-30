@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { editTodo, deleteTodo } from '../redux/actions/todoActions';
+import { editTodoRequest, deleteTodoRequest } from '../redux/actions/todoActions';
 import { TextField, Button, Box, Card, CardContent, IconButton, Typography, Stack } from '@mui/material';
 import { Delete, Edit, Save, Cancel } from '@mui/icons-material';
 import { format } from 'date-fns';
@@ -22,7 +22,7 @@ const TodoItem = ({ todo }) => {
       ...editedTodo,
       createdAt: todo.createdAt
     };
-    dispatch(editTodo(todo.id, updatedTodo));
+    dispatch(editTodoRequest(todo.id, updatedTodo));
     setIsEditing(false);
   };
 
@@ -32,7 +32,7 @@ const TodoItem = ({ todo }) => {
   };
 
   const handleDelete = () => {
-    dispatch(deleteTodo(todo.id));
+    dispatch(deleteTodoRequest(todo.id));
   };
 
   const handleChange = (e) => {
