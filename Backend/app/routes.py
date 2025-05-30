@@ -68,10 +68,15 @@ from .models import User, Todo
 from . import db
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from datetime import datetime
+import redis
+import json
 
 main = Blueprint('main', __name__)
 
-# User Registration
+##Redis Setup !!!
+r = redis.Redis(host='localhost', port=6379, db=0)
+
+# User Registration !!!!
 @main.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
@@ -87,7 +92,7 @@ def register():
     db.session.commit()
     return jsonify({'message': 'User created successfully'}), 201
 
-# User Login
+# User Login !!!
 @main.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
@@ -104,16 +109,23 @@ def login():
 @jwt_required()
 def get_todos():
     user_id = int(get_jwt_identity())
-    todos = Todo.query.filter_by(user_id=user_id).all()
-    return jsonify([
-        {
-            'id': t.id,
-            'title': t.title,
-            'description': t.description,
-            'createdAt': t.created_at.isoformat() if t.created_at else None,
-            'completed': t.completed
-        } for t in todos
-    ])
+    cache_key = f"todos:{user_id}"
+    cached = r.get(cache_key)
+    if cached:
+        todos_data = json.loads(cached)
+    else:
+        todos = Todo.query.filter_by(user_id=user_id).all()
+        todos_data = [
+            {
+                'id': t.id,
+                'title': t.title,
+                'description': t.description,
+                'createdAt': t.created_at.isoformat() if t.created_at else None,
+                'completed': t.completed
+            } for t in todos
+        ]
+        r.set(cache_key, json.dumps(todos_data), ex=300)  # paach min ka cache here
+    return jsonify(todos_data)
 
 @main.route('/todos', methods=['POST'])
 @jwt_required()
@@ -128,6 +140,8 @@ def create_todo():
     )
     db.session.add(new_todo)
     db.session.commit()
+    # deleting cache here
+    r.delete(f"todos:{user_id}")
     return jsonify({
         'id': new_todo.id,
         'title': new_todo.title,
@@ -146,6 +160,8 @@ def edit_todo(id):
     todo.description = data.get('description', todo.description)
     todo.completed = data.get('completed', todo.completed)
     db.session.commit()
+    # deleting the cache here for the user 
+    r.delete(f"todos:{user_id}")
     return jsonify({
         'id': todo.id,
         'title': todo.title,
@@ -161,4 +177,6 @@ def delete_todo(id):
     todo = Todo.query.filter_by(id=id, user_id=user_id).first_or_404()
     db.session.delete(todo)
     db.session.commit()
+    # Invalidate cache for this user
+    r.delete(f"todos:{user_id}")
     return jsonify({'message': f'Todo with id {id} deleted'})
